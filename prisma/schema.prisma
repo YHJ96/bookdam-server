@@ -11,3 +11,12 @@ model Test {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(6)
 }
+
+model Bookmark {
+  id          Int      @id @default(autoincrement())
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  title       String
+  description String
+  url         String
+  image       String
+}
