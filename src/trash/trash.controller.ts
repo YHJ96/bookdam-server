@@ -22,6 +22,8 @@ export class TrashController {
     return this.trashService.redoTrashBookmark(id);
   }
 
-  @Delete()
-  undo() {}
+  @Delete('/:id')
+  undo(@Param('id', ParseIntPipe) id: number) {
+    return this.trashService.undoTrashBookmark(id);
+  }
 }

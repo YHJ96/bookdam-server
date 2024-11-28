@@ -24,5 +24,9 @@ export class TrashService extends BookmarkService {
     });
   }
 
-  async undoTrashBookmark() {}
+  async undoTrashBookmark(id: number) {
+    await super.findByIdBookmark(id);
+
+    return await this.prisma.bookmark.delete({ where: { id } });
+  }
 }
