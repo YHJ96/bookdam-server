@@ -25,9 +25,12 @@ export class BookmarkController {
     return this.bookmarkService.createBookmark(bookmark);
   }
 
-  @Patch()
-  update(@Body() bookmark: UpdateBookmarkDTO) {
-    return this.bookmarkService.updateBookmark(bookmark);
+  @Patch('/:id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() bookmark: UpdateBookmarkDTO,
+  ) {
+    return this.bookmarkService.updateBookmark(id, bookmark);
   }
 
   @Delete('/:id')

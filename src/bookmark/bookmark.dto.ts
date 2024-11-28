@@ -1,6 +1,5 @@
-import { IsString, IsUrl, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsUrl, IsOptional } from 'class-validator';
 
-/* [TODO] 메세지 로그 정리 */
 export class CreateBookmarkDTO {
   @IsString()
   title: string;
@@ -13,9 +12,6 @@ export class CreateBookmarkDTO {
 }
 
 export class UpdateBookmarkDTO {
-  @IsNumber()
-  id: number;
-
   @IsOptional()
   @IsString()
   title: string;

@@ -20,13 +20,12 @@ export class BookmarkService {
     });
   }
 
-  async updateBookmark(bookmark: UpdateBookmarkDTO) {
-    const { id, ...data } = bookmark;
+  async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
     await this.findByIdBookmark(id);
 
     return await this.prisma.bookmark.update({
       where: { id },
-      data,
+      data: bookmark,
     });
   }
 
