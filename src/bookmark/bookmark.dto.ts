@@ -1,12 +1,26 @@
-import { IsString, IsUrl } from 'class-validator';
+import { IsString, IsUrl, IsOptional, IsNumber } from 'class-validator';
 
+/* [TODO] 메세지 로그 정리 */
 export class CreateBookmarkDTO {
-  @IsString({ message: '제목을 입력해야 합니다.' })
+  @IsString()
   title: string;
 
-  @IsString({ message: '내용을 입력해야 합니다.' })
+  @IsString()
   description: string;
 
-  @IsUrl({}, { message: 'URL 형식이 아닙니다.' })
+  @IsUrl()
   url: string;
+}
+
+export class UpdateBookmarkDTO {
+  @IsNumber()
+  id: number;
+
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
 }

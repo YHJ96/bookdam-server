@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import ogs from 'open-graph-scraper';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateBookmarkDTO } from './bookmark.dto';
+import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOGImage, mergeBookmark } from './bookmark.manager';
 
 @Injectable()
@@ -20,8 +20,25 @@ export class BookmarkService {
     };
   }
 
-  async findAllBookMark() {
+  async findAllBookmark() {
     return await this.prisma.bookmark.findMany();
+  }
+
+  async updateBookmark(bookmark: UpdateBookmarkDTO) {
+    const { id, ...data } = bookmark;
+    const prevBookmark = await this.prisma.bookmark.findUnique({
+      where: { id },
+    });
+
+    if (prevBookmark === null)
+      throw new NotFoundException(
+        `The bookmark with ID ${bookmark.id} does not exist.`,
+      );
+
+    return await this.prisma.bookmark.update({
+      where: { id },
+      data,
+    });
   }
 
   async createBookmark(bookmark: CreateBookmarkDTO) {

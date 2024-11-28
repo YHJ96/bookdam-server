@@ -1,6 +1,6 @@
 import { BookmarkService } from './bookmark.service';
-import { Body, Controller, Post, Get } from '@nestjs/common';
-import { CreateBookmarkDTO } from './bookmark.dto';
+import { Body, Controller, Post, Get, Patch } from '@nestjs/common';
+import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 
 @Controller('bookmark')
 export class BookmarkController {
@@ -8,7 +8,12 @@ export class BookmarkController {
 
   @Get()
   findAll() {
-    return this.bookmarkService.findAllBookMark();
+    return this.bookmarkService.findAllBookmark();
+  }
+
+  @Patch()
+  update(@Body() bookmark: UpdateBookmarkDTO) {
+    return this.bookmarkService.updateBookmark(bookmark);
   }
 
   @Post()
