@@ -19,4 +19,5 @@ model Bookmark {
   description String
   url         String
   image       String
+  is_deleted  Boolean  @default(false)
 }

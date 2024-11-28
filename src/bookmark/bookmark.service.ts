@@ -8,6 +8,37 @@ import { extractOGImage, mergeBookmark } from './bookmark.manager';
 export class BookmarkService {
   constructor(private prisma: PrismaService) {}
 
+  async findAllBookmark() {
+    return await this.prisma.bookmark.findMany();
+  }
+
+  async createBookmark(bookmark: CreateBookmarkDTO) {
+    const og = await this.getOpenGraph(bookmark.url);
+
+    return await this.prisma.bookmark.create({
+      data: mergeBookmark(bookmark, og),
+    });
+  }
+
+  async updateBookmark(bookmark: UpdateBookmarkDTO) {
+    const { id, ...data } = bookmark;
+    await this.findByIdBookmark(id);
+
+    return await this.prisma.bookmark.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async removeBookmark(id: number) {
+    await this.findByIdBookmark(id);
+
+    return await this.prisma.bookmark.update({
+      where: { id },
+      data: { is_deleted: true },
+    });
+  }
+
   private async getOpenGraph(url: string) {
     const { result } = await ogs({ url });
     const { ogTitle, ogDescription, ogImage, requestUrl } = result;
@@ -20,32 +51,14 @@ export class BookmarkService {
     };
   }
 
-  async findAllBookmark() {
-    return await this.prisma.bookmark.findMany();
-  }
-
-  async updateBookmark(bookmark: UpdateBookmarkDTO) {
-    const { id, ...data } = bookmark;
-    const prevBookmark = await this.prisma.bookmark.findUnique({
+  private async findByIdBookmark(id: number) {
+    const bookmark = await this.prisma.bookmark.findUnique({
       where: { id },
     });
 
-    if (prevBookmark === null)
-      throw new NotFoundException(
-        `The bookmark with ID ${bookmark.id} does not exist.`,
-      );
+    if (bookmark === null)
+      throw new NotFoundException(`The bookmark with ID ${id} does not exist.`);
 
-    return await this.prisma.bookmark.update({
-      where: { id },
-      data,
-    });
-  }
-
-  async createBookmark(bookmark: CreateBookmarkDTO) {
-    const og = await this.getOpenGraph(bookmark.url);
-
-    return await this.prisma.bookmark.create({
-      data: mergeBookmark(bookmark, og),
-    });
+    return bookmark;
   }
 }
