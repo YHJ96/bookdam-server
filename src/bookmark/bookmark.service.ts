@@ -6,7 +6,7 @@ import { extractOGImage, mergeBookmark } from './bookmark.manager';
 
 @Injectable()
 export class BookmarkService {
-  constructor(private prisma: PrismaService) {}
+  constructor(protected prisma: PrismaService) {}
 
   async findAllBookmark() {
     return await this.prisma.bookmark.findMany({
@@ -53,7 +53,7 @@ export class BookmarkService {
     };
   }
 
-  private async findByIdBookmark(id: number) {
+  protected async findByIdBookmark(id: number) {
     const bookmark = await this.prisma.bookmark.findUnique({
       where: { id },
     });

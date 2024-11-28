@@ -1,5 +1,12 @@
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { TrashService } from './trash.service';
-import { Controller, Delete, Get, Patch } from '@nestjs/common';
 
 @Controller('trash')
 export class TrashController {
@@ -10,8 +17,10 @@ export class TrashController {
     return this.trashService.findAllTrashBookmark();
   }
 
-  @Patch()
-  redo() {}
+  @Patch('/:id')
+  redo(@Param('id', ParseIntPipe) id: number) {
+    return this.trashService.redoTrashBookmark(id);
+  }
 
   @Delete()
   undo() {}

@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BookmarkService } from './../bookmark/bookmark.service';
 
 @Injectable()
-export class TrashService {
-  constructor(private prisma: PrismaService) {}
+export class TrashService extends BookmarkService {
+  constructor(protected prisma: PrismaService) {
+    super(prisma);
+  }
 
   async findAllTrashBookmark() {
     return await this.prisma.bookmark.findMany({
@@ -12,7 +15,14 @@ export class TrashService {
     });
   }
 
-  async redoTrashBookmark() {}
+  async redoTrashBookmark(id: number) {
+    await super.findByIdBookmark(id);
+
+    return await this.prisma.bookmark.update({
+      where: { id },
+      data: { is_deleted: false },
+    });
+  }
 
   async undoTrashBookmark() {}
 }
