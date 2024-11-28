@@ -20,6 +20,10 @@ export class BookmarkService {
     };
   }
 
+  async findAllBookMark() {
+    return await this.prisma.bookmark.findMany();
+  }
+
   async createBookmark(bookmark: CreateBookmarkDTO) {
     const og = await this.getOpenGraph(bookmark.url);
 
