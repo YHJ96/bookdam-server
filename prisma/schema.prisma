@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  // https://www.prisma.io/docs/orm/reference/prisma-client-reference#omit-preview
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {

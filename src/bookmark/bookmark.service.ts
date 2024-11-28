@@ -9,7 +9,10 @@ export class BookmarkService {
   constructor(private prisma: PrismaService) {}
 
   async findAllBookmark() {
-    return await this.prisma.bookmark.findMany();
+    return await this.prisma.bookmark.findMany({
+      omit: { is_deleted: true },
+      where: { is_deleted: false },
+    });
   }
 
   async createBookmark(bookmark: CreateBookmarkDTO) {
