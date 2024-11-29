@@ -9,16 +9,27 @@ datasource db {
 }
 
 model Bookmarks {
-  id          Int      @id(map: "Bookmark_pkey") @default(autoincrement())
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  title       String
-  description String
-  url         String
-  image       String
-  is_deleted  Boolean  @default(false)
+  id           Int            @id(map: "Bookmark_pkey") @default(autoincrement())
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  title        String
+  description  String
+  url          String
+  image        String
+  is_deleted   Boolean        @default(false)
+  BookmarkTags BookmarkTags[]
 }
 
 model Tags {
-  id   BigInt @id(map: "tags_pkey") @default(autoincrement())
-  name String @unique(map: "tags_name_key")
+  id           Int            @id(map: "tags_pkey") @default(autoincrement())
+  name         String         @unique(map: "tags_name_key")
+  BookmarkTags BookmarkTags[]
+}
+
+model BookmarkTags {
+  bookmark_id Int
+  tag_id      Int
+  Bookmarks   Bookmarks @relation(fields: [bookmark_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmarktags_bookmark_id_fkey")
+  Tags        Tags      @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmarktags_tag_id_fkey")
+
+  @@id([bookmark_id, tag_id])
 }

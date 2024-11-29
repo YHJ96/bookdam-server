@@ -3,10 +3,14 @@ import ogs from 'open-graph-scraper';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOGImage, mergeBookmark } from './bookmark.manager';
+import { TagService } from './../tag/tag.service';
 
 @Injectable()
 export class BookmarkService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private tagService: TagService,
+  ) {}
 
   async findAllBookmark() {
     return await this.prisma.bookmarks.findMany({
