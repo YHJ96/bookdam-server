@@ -1,4 +1,4 @@
-import { IsString, IsUrl, IsOptional } from 'class-validator';
+import { IsString, IsUrl, IsOptional, IsArray } from 'class-validator';
 
 export class CreateBookmarkDTO {
   @IsString()
@@ -9,6 +9,11 @@ export class CreateBookmarkDTO {
 
   @IsUrl()
   url: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags: string[];
 }
 
 export class UpdateBookmarkDTO {

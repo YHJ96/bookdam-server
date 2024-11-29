@@ -16,14 +16,25 @@ export class BookmarkService {
     return await this.prisma.bookmarks.findMany({
       omit: { is_deleted: true },
       where: { is_deleted: false },
+      include: {
+        BookmarkTags: { select: { Tags: { select: { name: true } } } },
+      },
     });
   }
 
   async createBookmark(bookmark: CreateBookmarkDTO) {
     const og = await this.getOpenGraph(bookmark.url);
 
+    const tags = await this.tagService.createTags(bookmark.tags);
+    const tagIds = tags.map((tag) => ({ tag_id: tag.id }));
+
     return await this.prisma.bookmarks.create({
-      data: mergeBookmark(bookmark, og),
+      data: {
+        ...mergeBookmark(bookmark, og),
+        BookmarkTags: {
+          create: tagIds,
+        },
+      },
     });
   }
 

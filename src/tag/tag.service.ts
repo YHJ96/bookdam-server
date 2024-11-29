@@ -8,6 +8,15 @@ export class TagService {
   async createTags(names: string[]) {
     const result = names.map((name) => ({ name }));
 
-    return await this.prisma.tags.createMany({ data: result });
+    await this.prisma.tags.createMany({
+      data: result,
+      skipDuplicates: true,
+    });
+
+    return this.findByNamesTags(names);
+  }
+
+  private async findByNamesTags(names: string[]) {
+    return await this.prisma.tags.findMany({ where: { name: { in: names } } });
   }
 }
