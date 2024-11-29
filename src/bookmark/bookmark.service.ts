@@ -9,7 +9,7 @@ export class BookmarkService {
   constructor(private prisma: PrismaService) {}
 
   async findAllBookmark() {
-    return await this.prisma.bookmark.findMany({
+    return await this.prisma.bookmarks.findMany({
       omit: { is_deleted: true },
       where: { is_deleted: false },
     });
@@ -18,20 +18,20 @@ export class BookmarkService {
   async createBookmark(bookmark: CreateBookmarkDTO) {
     const og = await this.getOpenGraph(bookmark.url);
 
-    return await this.prisma.bookmark.create({
+    return await this.prisma.bookmarks.create({
       data: mergeBookmark(bookmark, og),
     });
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
-    return await this.prisma.bookmark.update({
+    return await this.prisma.bookmarks.update({
       where: { id },
       data: bookmark,
     });
   }
 
   async removeBookmark(id: number) {
-    return await this.prisma.bookmark.update({
+    return await this.prisma.bookmarks.update({
       where: { id, is_deleted: false },
       data: { is_deleted: true },
     });
