@@ -6,10 +6,12 @@ export class TagService {
   constructor(private prisma: PrismaService) {}
 
   async findAllTags() {
-    return await this.prisma.bookmarkTags.findMany({
-      select: { Tags: { select: { name: true } } },
+    const tags = await this.prisma.bookmarkTags.findMany({
+      select: { tags: { select: { name: true } } },
       distinct: ['tag_id'],
     });
+
+    return tags.map((relation) => relation.tags.name);
   }
 
   async createTags(names: string[]) {
@@ -24,6 +26,10 @@ export class TagService {
   }
 
   private async findByNamesTags(names: string[]) {
-    return await this.prisma.tags.findMany({ where: { name: { in: names } } });
+    const tags = await this.prisma.tags.findMany({
+      where: { name: { in: names } },
+    });
+
+    return tags.map((tag) => ({ tag_id: tag.id }));
   }
 }
