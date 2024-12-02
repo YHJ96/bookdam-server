@@ -8,16 +8,22 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
+import {
+  CreateBookmarkDTO,
+  FindAllBookmarkDTO,
+  UpdateBookmarkDTO,
+} from './bookmark.dto';
 
 @Controller('bookmark')
 export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) {}
 
   @Get()
-  findAll() {
-    return this.bookmarkService.findAllBookmark();
+  findAll(@Query() { tags }: FindAllBookmarkDTO) {
+    if (tags === null) return this.bookmarkService.findAllBookmark();
+    return this.bookmarkService.findAllIncludeTags(tags);
   }
 
   @Post()
