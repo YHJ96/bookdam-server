@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOGImage, mergeBookmark } from './bookmark.manager';
 import { TagService } from './../tag/tag.service';
+import { flatArrayObject } from '../helper/utils';
 
 @Injectable()
 export class BookmarkService {
@@ -13,13 +14,18 @@ export class BookmarkService {
   ) {}
 
   async findAllBookmark() {
-    return await this.prisma.bookmarks.findMany({
+    const bookmarks = await this.prisma.bookmarks.findMany({
       omit: { is_deleted: true },
       where: { is_deleted: false },
       include: {
         BookmarkTags: { select: { Tags: { select: { name: true } } } },
       },
     });
+
+    return bookmarks.map(({ BookmarkTags, ...rest }) => ({
+      ...rest,
+      tags: flatArrayObject(BookmarkTags),
+    }));
   }
 
   async createBookmark(bookmark: CreateBookmarkDTO) {
@@ -28,14 +34,19 @@ export class BookmarkService {
     const tags = await this.tagService.createTags(bookmark.tags);
     const tagIds = tags.map((tag) => ({ tag_id: tag.id }));
 
-    return await this.prisma.bookmarks.create({
+    const { BookmarkTags, ...rest } = await this.prisma.bookmarks.create({
       data: {
         ...mergeBookmark(bookmark, og),
         BookmarkTags: {
           create: tagIds,
         },
       },
+      include: {
+        BookmarkTags: { select: { Tags: { select: { name: true } } } },
+      },
     });
+
+    return { ...rest, tags: flatArrayObject(BookmarkTags) };
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
