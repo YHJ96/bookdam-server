@@ -5,6 +5,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class TagService {
   constructor(private prisma: PrismaService) {}
 
+  async findAllTags() {
+    return await this.prisma.bookmarkTags.findMany({
+      select: { Tags: { select: { name: true } } },
+      distinct: ['tag_id'],
+    });
+  }
+
   async createTags(names: string[]) {
     const result = names.map((name) => ({ name }));
 
