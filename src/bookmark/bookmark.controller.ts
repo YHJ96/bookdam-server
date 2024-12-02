@@ -21,9 +21,9 @@ export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) {}
 
   @Get()
-  findAll(@Query() { tags }: FindAllBookmarkDTO) {
-    if (tags === null) return this.bookmarkService.findAllBookmark();
-    return this.bookmarkService.findAllIncludeTags(tags);
+  findAll(@Query() { tags, asc }: FindAllBookmarkDTO) {
+    if (tags === null) return this.bookmarkService.findAllBookmark(asc);
+    return this.bookmarkService.findAllIncludeTags(tags, asc);
   }
 
   @Post()

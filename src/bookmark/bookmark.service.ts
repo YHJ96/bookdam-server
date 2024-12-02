@@ -12,7 +12,7 @@ export class BookmarkService {
     private tagService: TagService,
   ) {}
 
-  async findAllIncludeTags(tags: string[]) {
+  async findAllIncludeTags(tags: string[], isAsc: boolean) {
     const bookmarks = await this.prisma.bookmarks.findMany({
       omit: { is_deleted: true },
       where: {
@@ -21,7 +21,7 @@ export class BookmarkService {
           some: { tags: { name: { in: tags, mode: 'insensitive' } } },
         },
       },
-      orderBy: { created_at: 'asc' },
+      orderBy: { created_at: isAsc ? 'asc' : 'desc' },
       include: {
         bookmarkTags: { select: { tags: { select: { name: true } } } },
       },
@@ -34,11 +34,11 @@ export class BookmarkService {
     });
   }
 
-  async findAllBookmark() {
+  async findAllBookmark(isAsc: boolean) {
     const bookmarks = await this.prisma.bookmarks.findMany({
       omit: { is_deleted: true },
       where: { is_deleted: false },
-      orderBy: { created_at: 'asc' },
+      orderBy: { created_at: isAsc ? 'asc' : 'desc' },
       include: {
         bookmarkTags: { select: { tags: { select: { name: true } } } },
       },
