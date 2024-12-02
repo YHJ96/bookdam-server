@@ -50,9 +50,15 @@ export class BookmarkService {
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
+    await this.prisma.bookmarkTags.deleteMany({ where: { bookmark_id: id } });
+
+    const tags = await this.tagService.createTags(bookmark.tags);
+    const tagIds = tags.map((tag) => ({ tag_id: tag.id }));
+    Reflect.deleteProperty(bookmark, 'tags');
+
     return await this.prisma.bookmarks.update({
       where: { id },
-      data: bookmark,
+      data: { ...bookmark, BookmarkTags: { create: tagIds } },
     });
   }
 
