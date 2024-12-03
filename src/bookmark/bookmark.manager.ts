@@ -20,13 +20,14 @@ export const extractOGImage = (image: OgImage) => {
   return image[0].url;
 };
 
-const EMPTY_IMAGE = '';
+const EMPTY_IMAGE =
+  'https://zyhedgwubqhgbbifgwmd.supabase.co/storage/v1/object/sign/image/empty.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZS9lbXB0eS53ZWJwIiwiaWF0IjoxNzMzMjExNTI5LCJleHAiOjE3NjQ3NDc1Mjl9.2aBu-Xc8hUQN5ZWFOeFxCIiDd-ESxSH524Bcjc1M3DU&t=2024-12-03T07%3A38%3A49.188Z';
 export const mergeBookmark = (bookmark: CreateBookmarkDTO, og: OgResult) => {
   const result = {
     title: og.title ?? '',
     description: og.description ?? '',
     url: og.url ?? '',
-    image: EMPTY_IMAGE,
+    image: og.image ?? EMPTY_IMAGE,
   };
 
   if (bookmark.title !== '') result.title = bookmark.title;
