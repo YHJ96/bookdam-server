@@ -7,7 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserService } from '../user/user.service';
 
 @Module({
-  imports: [PassportModule, JwtModule.register({})],
+  imports: [PassportModule, JwtModule.register({ secret: 'TEST' })],
   controllers: [AuthController],
   providers: [AuthService, UserService, KakaoStrategy],
 })
