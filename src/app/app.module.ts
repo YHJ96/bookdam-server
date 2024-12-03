@@ -6,6 +6,7 @@ import { BookmarkModule } from '../bookmark/bookmark.module';
 import { TrashModule } from '../trash/trash.module';
 import { TagModule } from '../tag/tag.module';
 import { AuthModule } from '../auth/auth.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from '../auth/auth.module';
     TrashModule,
     TagModule,
     AuthModule,
+    UserModule,
     PrismaModule,
   ],
   controllers: [AppController],

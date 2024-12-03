@@ -19,7 +19,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     console.log('refreshToken: ', refreshToken);
 
     const oAuth = {
-      id: profile.id,
+      id: profile.id.toString(),
       name: profile.displayName,
       email: profile._json.kakao_account.email,
       avatar: profile._json.properties.profile_image,
