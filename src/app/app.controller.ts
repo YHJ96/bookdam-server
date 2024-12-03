@@ -5,7 +5,7 @@ import { Public } from '../helper/decorators/public.decorator';
 export class AppController {
   @Public()
   @Get()
-  healthCheck(): string {
+  healthCheck() {
     return 'Server is Heathly';
   }
 }

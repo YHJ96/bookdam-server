@@ -1,10 +1,12 @@
-import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { Response, Request } from 'express';
+import type { Response } from 'express';
+import type { User } from '@prisma/client';
 import { KakaoAuthGuard } from '../helper/guard/kakao.guard';
 import { AuthService } from './auth.service';
 import { UserService } from './../user/user.service';
 import { Public } from './../helper/decorators/public.decorator';
+import { Jwt } from './../helper/decorators/jwt.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -24,15 +26,13 @@ export class AuthController {
     return 'kakao';
   }
 
-  /* [TODO] DTO 만들어서 제공해야 함 */
   @Public()
   @Get('/callback')
   @UseGuards(KakaoAuthGuard)
-  async callback(@Req() req: Request, @Res() res: Response) {
-    const user = req.user as any;
-    const { accessToken, refreshToken } = this.authService.createJwt(user.id);
+  async callback(@Jwt() jwt: User, @Res() res: Response) {
+    const { accessToken, refreshToken } = this.authService.createJwt(jwt.id);
 
-    await this.userService.createUser(user);
+    await this.userService.createUser(jwt);
     this.authService.regiserCookie('access', accessToken, res);
     this.authService.regiserCookie('refresh', refreshToken, res);
 
