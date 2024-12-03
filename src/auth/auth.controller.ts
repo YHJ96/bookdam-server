@@ -4,6 +4,7 @@ import type { Response, Request } from 'express';
 import { KakaoAuthGuard } from '../helper/guard/kakao.guard';
 import { AuthService } from './auth.service';
 import { UserService } from './../user/user.service';
+import { Public } from './../helper/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,7 @@ export class AuthController {
     this.CLIENT_REDIRECT_URL = config.get('CLIENT_REDIRECT_URL');
   }
 
+  @Public()
   @Get()
   @UseGuards(KakaoAuthGuard)
   async login() {
@@ -23,6 +25,7 @@ export class AuthController {
   }
 
   /* [TODO] DTO 만들어서 제공해야 함 */
+  @Public()
   @Get('/callback')
   @UseGuards(KakaoAuthGuard)
   async callback(@Req() req: Request, @Res() res: Response) {

@@ -1,6 +1,7 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
 import { OgsExceptionFilter } from './helper/filters/ogs-exception-filter';
 import { PrismaClientExceptionFilter } from './helper/filters/prisma-client-exception-filter';
@@ -10,6 +11,8 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const PORT = config.get('PORT');
   const CLIENT_URL = config.get('CLIENT_URL');
+
+  app.use(cookieParser());
 
   app.enableCors({
     origin: CLIENT_URL,
