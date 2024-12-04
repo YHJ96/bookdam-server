@@ -5,22 +5,25 @@ import { PrismaService } from '@/prisma';
 export class TrashService {
   constructor(private prisma: PrismaService) {}
 
-  async findAllTrashBookmark() {
+  async findAllTrashBookmark(id: string) {
     return await this.prisma.bookmark.findMany({
-      where: { is_deleted: true },
+      omit: { user_id: true },
+      where: { user_id: id, is_deleted: true },
     });
   }
 
-  async redoTrashBookmark(id: number) {
+  async redoTrashBookmark(userId: string, bookmarkId: number) {
     return await this.prisma.bookmark.update({
-      where: { id, is_deleted: true },
+      omit: { user_id: true },
+      where: { user_id: userId, id: bookmarkId, is_deleted: true },
       data: { is_deleted: false },
     });
   }
 
-  async undoTrashBookmark(id: number) {
+  async undoTrashBookmark(userId: string, bookmarkId: number) {
     return await this.prisma.bookmark.delete({
-      where: { id, is_deleted: true },
+      omit: { user_id: true },
+      where: { user_id: userId, id: bookmarkId, is_deleted: true },
     });
   }
 }
