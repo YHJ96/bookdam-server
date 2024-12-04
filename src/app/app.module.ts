@@ -8,7 +8,8 @@ import { TrashModule } from '../trash/trash.module';
 import { TagModule } from '../tag/tag.module';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
-import { JwtAuthGuard } from './../helper/guard/jwt.guard';
+
+import { JwtAuthGuard } from '@/helper/guard';
 
 @Module({
   imports: [

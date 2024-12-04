@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { KakaoStrategy } from '../helper/strategies/kakao.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { UserService } from '../user/user.service';
-import { JwtStrategy } from '../helper/strategies/jwt.strategy';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { GoogleStrategy } from 'src/helper/strategies/google.strategy';
+import {
+  GoogleStrategy,
+  KakaoStrategy,
+  JwtStrategy,
+} from '@/helper/strategies';
 
 @Module({
   imports: [

@@ -3,8 +3,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
-import { OgsExceptionFilter } from './helper/filters/ogs-exception-filter';
-import { PrismaClientExceptionFilter } from './helper/filters/prisma-client-exception-filter';
+import {
+  OgsExceptionFilter,
+  PrismaClientExceptionFilter,
+} from '@/helper/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

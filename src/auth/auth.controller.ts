@@ -2,12 +2,10 @@ import { Controller, Get, UseGuards, Res, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import type { User } from '@prisma/client';
-import { KakaoAuthGuard } from '../helper/guard/kakao.guard';
 import { AuthService } from './auth.service';
 import { UserService } from './../user/user.service';
-import { Public } from './../helper/decorators/public.decorator';
-import { Jwt } from './../helper/decorators/jwt.decorator';
-import { GoogleAuthGuard } from 'src/helper/guard/google.guard';
+import { Jwt, Public } from '@/helper/decorators';
+import { GoogleAuthGuard, KakaoAuthGuard } from '@/helper/guard';
 
 @Controller('auth')
 export class AuthController {
