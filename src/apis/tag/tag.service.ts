@@ -6,18 +6,18 @@ export class TagService {
   constructor(private prisma: PrismaService) {}
 
   async findAllTags() {
-    const tags = await this.prisma.bookmarkTags.findMany({
-      select: { tags: { select: { name: true } } },
+    const tags = await this.prisma.tags.findMany({
+      select: { tag: { select: { name: true } } },
       distinct: ['tag_id'],
     });
 
-    return tags.map((relation) => relation.tags.name);
+    return tags.map((relation) => relation.tag.name);
   }
 
   async createTags(names: string[]) {
     const result = names.map((name) => ({ name }));
 
-    await this.prisma.tags.createMany({
+    await this.prisma.tag.createMany({
       data: result,
       skipDuplicates: true,
     });
@@ -26,7 +26,7 @@ export class TagService {
   }
 
   private async findByNamesTags(names: string[]) {
-    const tags = await this.prisma.tags.findMany({
+    const tags = await this.prisma.tag.findMany({
       where: { name: { in: names } },
     });
 

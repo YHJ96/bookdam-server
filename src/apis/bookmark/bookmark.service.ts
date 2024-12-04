@@ -13,41 +13,27 @@ export class BookmarkService {
   ) {}
 
   async findAllIncludeTags(tags: string[], isAsc: boolean) {
-    const bookmarks = await this.prisma.bookmarks.findMany({
-      omit: { is_deleted: true },
+    return await this.prisma.bookmark.findMany({
       where: {
         is_deleted: false,
-        bookmarkTags: {
-          some: { tags: { name: { in: tags, mode: 'insensitive' } } },
+        tags: {
+          some: { tag: { name: { in: tags, mode: 'insensitive' } } },
         },
       },
       orderBy: { created_at: isAsc ? 'asc' : 'desc' },
       include: {
-        bookmarkTags: { select: { tags: { select: { name: true } } } },
+        tags: { select: { tag: { select: { name: true } } } },
       },
-    });
-
-    return bookmarks.map((bookmark) => {
-      const { bookmarkTags, ...rest } = bookmark;
-      const tags = bookmarkTags.map((relation) => relation.tags.name);
-      return { ...rest, tags };
     });
   }
 
   async findAllBookmark(isAsc: boolean) {
-    const bookmarks = await this.prisma.bookmarks.findMany({
-      omit: { is_deleted: true },
+    return await this.prisma.bookmark.findMany({
       where: { is_deleted: false },
       orderBy: { created_at: isAsc ? 'asc' : 'desc' },
       include: {
-        bookmarkTags: { select: { tags: { select: { name: true } } } },
+        tags: { select: { tag: { select: { name: true } } } },
       },
-    });
-
-    return bookmarks.map((bookmark) => {
-      const { bookmarkTags, ...rest } = bookmark;
-      const tags = bookmarkTags.map((relation) => relation.tags.name);
-      return { ...rest, tags };
     });
   }
 
@@ -55,56 +41,40 @@ export class BookmarkService {
     const og = await this.getOpenGraph(bookmark.url);
     const tagIds = await this.tagService.createTags(bookmark.tags);
 
-    const { bookmarkTags, ...rest } = await this.prisma.bookmarks.create({
+    return await this.prisma.bookmark.create({
       omit: { is_deleted: true },
       include: {
-        bookmarkTags: { select: { tags: { select: { name: true } } } },
+        tags: { select: { tag: { select: { name: true } } } },
       },
       data: {
         ...mergeBookmark(bookmark, og),
-        bookmarkTags: {
-          create: tagIds,
-        },
+        tags: { create: tagIds },
       },
     });
-
-    const tags = bookmarkTags.map((relation) => relation.tags.name);
-
-    return { ...rest, tags };
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
-    await this.prisma.bookmarkTags.deleteMany({ where: { bookmark_id: id } });
+    await this.prisma.tags.deleteMany({ where: { bookmark_id: id } });
 
     const tagIds = await this.tagService.createTags(bookmark.tags);
     Reflect.deleteProperty(bookmark, 'tags');
 
-    const { bookmarkTags, ...rest } = await this.prisma.bookmarks.update({
+    return await this.prisma.bookmark.update({
       where: { id },
       omit: { is_deleted: true },
-      include: {
-        bookmarkTags: { select: { tags: { select: { name: true } } } },
-      },
-      data: { ...bookmark, bookmarkTags: { create: tagIds } },
+      include: { tags: { select: { tag: { select: { name: true } } } } },
+      data: { ...bookmark, tags: { create: tagIds } },
     });
-
-    const tags = bookmarkTags.map((relation) => relation.tags.name);
-
-    return { ...rest, tags };
   }
 
   async removeBookmark(id: number) {
-    const { bookmarkTags, ...rest } = await this.prisma.bookmarks.update({
+    return await this.prisma.bookmark.update({
       where: { id, is_deleted: false },
       include: {
-        bookmarkTags: { select: { tags: { select: { name: true } } } },
+        tags: { select: { tag: { select: { name: true } } } },
       },
       data: { is_deleted: true },
     });
-
-    const tags = bookmarkTags.map((relation) => relation.tags.name);
-
-    return { ...rest, tags };
   }
 
   private async getOpenGraph(url: string) {
