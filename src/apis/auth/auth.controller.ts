@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import type { User } from '@prisma/client';
 import { AuthService } from '@/apis/auth/auth.service';
-import { UserService } from '@/apis/user/user.service';
+import { UserService } from '@/modules/user/user.service';
 import { Jwt, Public } from '@/helpers/decorators';
 import { GoogleAuthGuard, KakaoAuthGuard } from '@/helpers/guard';
 

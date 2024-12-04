@@ -7,7 +7,6 @@ import { BookmarkModule } from '@/apis/bookmark/bookmark.module';
 import { TrashModule } from '@/apis/trash/trash.module';
 import { TagModule } from '@/apis/tag/tag.module';
 import { AuthModule } from '@/apis/auth/auth.module';
-import { UserModule } from '@/apis/user/user.module';
 import { JwtAuthGuard } from '@/helpers/guard';
 
 @Module({
@@ -17,7 +16,6 @@ import { JwtAuthGuard } from '@/helpers/guard';
     TrashModule,
     TagModule,
     AuthModule,
-    UserModule,
     PrismaModule,
   ],
   controllers: [AppController],
