@@ -6,7 +6,7 @@ import { AppModule } from './app/app.module';
 import {
   OgsExceptionFilter,
   PrismaClientExceptionFilter,
-} from '@/helper/filters';
+} from '@/helpers/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -9,7 +9,7 @@ import {
   GoogleStrategy,
   KakaoStrategy,
   JwtStrategy,
-} from '@/helper/strategies';
+} from '@/helpers/strategies';
 
 @Module({
   imports: [

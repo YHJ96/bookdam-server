@@ -4,8 +4,8 @@ import type { Response } from 'express';
 import type { User } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { UserService } from './../user/user.service';
-import { Jwt, Public } from '@/helper/decorators';
-import { GoogleAuthGuard, KakaoAuthGuard } from '@/helper/guard';
+import { Jwt, Public } from '@/helpers/decorators';
+import { GoogleAuthGuard, KakaoAuthGuard } from '@/helpers/guard';
 
 @Controller('auth')
 export class AuthController {

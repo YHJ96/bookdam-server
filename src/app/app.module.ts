@@ -9,7 +9,7 @@ import { TagModule } from '../tag/tag.module';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 
-import { JwtAuthGuard } from '@/helper/guard';
+import { JwtAuthGuard } from '@/helpers/guard';
 
 @Module({
   imports: [
