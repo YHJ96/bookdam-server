@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { BookmarkService } from '@/apis/bookmark';
+import { BookmarkService } from '@/apis/bookmark/bookmark.service';
 import {
   CreateBookmarkDTO,
   FindAllBookmarkDTO,

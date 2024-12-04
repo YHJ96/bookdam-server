@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import ogs from 'open-graph-scraper';
 import { PrismaService } from '@/prisma';
-import { TagService } from '@/apis/tag';
+import { TagService } from '@/apis/tag/tag.service';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOgImage, mergeBookmark } from './bookmark.manager';
 

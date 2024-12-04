@@ -2,7 +2,7 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
-import { AppModule } from '@/apis/app';
+import { AppModule } from '@/apis/app/app.module';
 import {
   OgsExceptionFilter,
   PrismaClientExceptionFilter,

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TagService, TagController } from '@/apis/tag';
+import { TagController } from '@/apis/tag/tag.controller';
+import { TagService } from '@/apis/tag/tag.service';
 
 @Module({
   providers: [TagService],

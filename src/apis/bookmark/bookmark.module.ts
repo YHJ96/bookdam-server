@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BookmarkController, BookmarkService } from '@/apis/bookmark';
-import { TagModule } from '@/apis/tag';
+import { BookmarkController } from '@/apis/bookmark/bookmark.controller';
+import { BookmarkService } from '@/apis/bookmark/bookmark.service';
+import { TagModule } from '@/apis/tag/tag.module';
 
 @Module({
   imports: [TagModule],

@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { UserService } from '@/apis/user';
-import { AuthService, AuthController } from '@/apis/auth';
+import { UserService } from '@/apis/user/user.service';
+import { AuthController } from '@/apis/auth/auth.controller';
+import { AuthService } from '@/apis/auth/auth.service';
 import {
   GoogleStrategy,
   KakaoStrategy,
