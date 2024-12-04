@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Res } from '@nestjs/common';
+import { Controller, Get, UseGuards, Res, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import type { User } from '@prisma/client';
@@ -58,5 +58,17 @@ export class AuthController {
     this.authService.regiserCookie('refresh', refreshToken, res);
 
     return res.redirect(this.CLIENT_REDIRECT_URL);
+  }
+
+  @Post('/refresh')
+  refresh(@Jwt() jwt: User, @Res() res: Response) {
+    const { accessToken } = this.authService.createJwt(jwt.id);
+
+    return this.authService.regiserCookie('access', accessToken, res);
+  }
+
+  @Post('/logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.clearCookie(res);
   }
 }
