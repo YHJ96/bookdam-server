@@ -12,7 +12,7 @@ type OgResult = {
   [K in keyof Og as OgItems[K]]: Og[K];
 } & { image?: string };
 
-export const extractOGImage = (image: OgImage) => {
+export const extractOgImage = (image: OgImage) => {
   if (image === undefined) return undefined;
   if (image.length === 0) return undefined;
   if (image[0].url === undefined) return undefined;
@@ -33,8 +33,3 @@ export const mergeBookmark = (bookmark: CreateBookmarkDTO, og: OgResult) => {
 
   return result;
 };
-
-(function () {
-  console.log(1);
-  console.log(process.env);
-})();

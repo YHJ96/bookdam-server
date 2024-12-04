@@ -3,7 +3,7 @@ import ogs from 'open-graph-scraper';
 import { PrismaService } from '@/prisma';
 import { TagService } from '@/apis/tag';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
-import { extractOGImage, mergeBookmark } from './bookmark.manager';
+import { extractOgImage, mergeBookmark } from './bookmark.manager';
 
 @Injectable()
 export class BookmarkService {
@@ -114,7 +114,7 @@ export class BookmarkService {
     return {
       title: ogTitle,
       description: ogDescription,
-      image: extractOGImage(ogImage),
+      image: extractOgImage(ogImage),
       url: requestUrl,
     };
   }
