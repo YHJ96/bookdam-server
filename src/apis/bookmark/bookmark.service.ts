@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import ogs from 'open-graph-scraper';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '@/prisma';
+import { TagService } from '@/apis/tag';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOGImage, mergeBookmark } from './bookmark.manager';
-import { TagService } from './../tag/tag.service';
 
 @Injectable()
 export class BookmarkService {

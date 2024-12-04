@@ -2,8 +2,8 @@ import { Controller, Get, UseGuards, Res, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import type { User } from '@prisma/client';
-import { AuthService } from './auth.service';
-import { UserService } from './../user/user.service';
+import { AuthService } from '@/apis/auth';
+import { UserService } from '@/apis/user';
 import { Jwt, Public } from '@/helpers/decorators';
 import { GoogleAuthGuard, KakaoAuthGuard } from '@/helpers/guard';
 

@@ -1,4 +1,3 @@
-import { BookmarkService } from './bookmark.service';
 import {
   Body,
   Controller,
@@ -10,6 +9,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
+import { BookmarkService } from '@/apis/bookmark';
 import {
   CreateBookmarkDTO,
   FindAllBookmarkDTO,
