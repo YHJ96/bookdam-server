@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { UserService } from './../user/user.service';
 import { Public } from './../helper/decorators/public.decorator';
 import { Jwt } from './../helper/decorators/jwt.decorator';
+import { GoogleAuthGuard } from 'src/helper/guard/google.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,16 +21,36 @@ export class AuthController {
   }
 
   @Public()
-  @Get()
+  @Get('/kakao')
   @UseGuards(KakaoAuthGuard)
-  async login() {
+  async kakao() {
     return 'kakao';
   }
 
   @Public()
-  @Get('/callback')
+  @Get('/kakao/callback')
   @UseGuards(KakaoAuthGuard)
-  async callback(@Jwt() jwt: User, @Res() res: Response) {
+  async kakaoCallback(@Jwt() jwt: User, @Res() res: Response) {
+    const { accessToken, refreshToken } = this.authService.createJwt(jwt.id);
+
+    await this.userService.createUser(jwt);
+    this.authService.regiserCookie('access', accessToken, res);
+    this.authService.regiserCookie('refresh', refreshToken, res);
+
+    return res.redirect(this.CLIENT_REDIRECT_URL);
+  }
+
+  @Public()
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  async google() {
+    return 'google';
+  }
+
+  @Public()
+  @Get('/google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleCallback(@Jwt() jwt: User, @Res() res: Response) {
     const { accessToken, refreshToken } = this.authService.createJwt(jwt.id);
 
     await this.userService.createUser(jwt);
