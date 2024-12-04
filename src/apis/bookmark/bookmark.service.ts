@@ -3,6 +3,7 @@ import ogs from 'open-graph-scraper';
 import { PrismaService } from '@/prisma';
 import { TagService } from '@/apis/tag/tag.service';
 import { bookmarksConverter, bookmarkConverter, order } from '@/utils';
+import { TagsService } from '@/modules/tags/tags.service';
 import { CreateBookmarkDTO, UpdateBookmarkDTO } from './bookmark.dto';
 import { extractOgImage, mergeBookmark } from './bookmark.manager';
 
@@ -10,6 +11,7 @@ import { extractOgImage, mergeBookmark } from './bookmark.manager';
 export class BookmarkService {
   constructor(
     private prisma: PrismaService,
+    private tagsService: TagsService,
     private tagService: TagService,
   ) {}
 
@@ -49,7 +51,7 @@ export class BookmarkService {
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
-    await this.prisma.tags.deleteMany({ where: { bookmark_id: id } });
+    await this.tagsService.deleteMany(id);
 
     const tagIds = await this.tagService.createTags(bookmark.tags);
     Reflect.deleteProperty(bookmark, 'tags');
