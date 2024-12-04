@@ -15,9 +15,11 @@ export class BookmarkService {
     private tagService: TagService,
   ) {}
 
-  async findAllIncludeTags(tags: string[], isAsc: boolean) {
+  async findAllIncludeTags(id: string, tags: string[], isAsc: boolean) {
     const result = await this.prisma.bookmark.findMany({
+      omit: { user_id: true },
       where: {
+        user_id: id,
         is_deleted: false,
         tags: { some: { tag: { name: { in: tags, mode: 'insensitive' } } } },
       },
@@ -28,9 +30,10 @@ export class BookmarkService {
     return bookmarksConverter(result);
   }
 
-  async findAllBookmark(isAsc: boolean) {
+  async findAllBookmark(id: string, isAsc: boolean) {
     const result = await this.prisma.bookmark.findMany({
-      where: { is_deleted: false },
+      omit: { user_id: true },
+      where: { user_id: id, is_deleted: false },
       orderBy: { created_at: order(isAsc) },
       include: { tags: { include: { tag: true } } },
     });
@@ -38,26 +41,36 @@ export class BookmarkService {
     return bookmarksConverter(result);
   }
 
-  async createBookmark(bookmark: CreateBookmarkDTO) {
+  async createBookmark(id: string, bookmark: CreateBookmarkDTO) {
     const og = await this.getOpenGraph(bookmark.url);
     const tagIds = await this.tagService.createTags(bookmark.tags);
 
     const result = await this.prisma.bookmark.create({
+      omit: { user_id: true },
       include: { tags: { include: { tag: true } } },
-      data: { ...mergeBookmark(bookmark, og), tags: { create: tagIds } },
+      data: {
+        ...mergeBookmark(bookmark, og),
+        user_id: id,
+        tags: { create: tagIds },
+      },
     });
 
     return bookmarkConverter(result);
   }
 
-  async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
-    await this.tagsService.deleteManyTags(id);
+  async updateBookmark(
+    userId: string,
+    bookmarkId: number,
+    bookmark: UpdateBookmarkDTO,
+  ) {
+    await this.tagsService.deleteManyTags(bookmarkId);
 
     const tagIds = await this.tagService.createTags(bookmark.tags);
     Reflect.deleteProperty(bookmark, 'tags');
 
     const result = await this.prisma.bookmark.update({
-      where: { id },
+      omit: { user_id: true },
+      where: { user_id: userId, id: bookmarkId },
       include: { tags: { include: { tag: true } } },
       data: { ...bookmark, tags: { create: tagIds } },
     });
@@ -65,9 +78,10 @@ export class BookmarkService {
     return bookmarkConverter(result);
   }
 
-  async removeBookmark(id: number) {
+  async removeBookmark(useId: string, bookmarkId: number) {
     return await this.prisma.bookmark.update({
-      where: { id, is_deleted: false },
+      omit: { user_id: true },
+      where: { user_id: useId, id: bookmarkId, is_deleted: false },
       data: { is_deleted: true },
     });
   }

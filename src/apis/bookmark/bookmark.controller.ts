@@ -10,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { BookmarkService } from '@/apis/bookmark/bookmark.service';
+import { Auth } from '@/helpers/decorators';
 import {
   CreateBookmarkDTO,
   FindAllBookmarkDTO,
@@ -21,26 +22,30 @@ export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) {}
 
   @Get()
-  findAll(@Query() { tags, asc }: FindAllBookmarkDTO) {
-    if (tags === null) return this.bookmarkService.findAllBookmark(asc);
-    return this.bookmarkService.findAllIncludeTags(tags, asc);
+  findAll(@Auth() id: string, @Query() { tags, asc }: FindAllBookmarkDTO) {
+    if (tags === null) return this.bookmarkService.findAllBookmark(id, asc);
+    return this.bookmarkService.findAllIncludeTags(id, tags, asc);
   }
 
   @Post()
-  create(@Body() bookmark: CreateBookmarkDTO) {
-    return this.bookmarkService.createBookmark(bookmark);
+  create(@Auth() id: string, @Body() bookmark: CreateBookmarkDTO) {
+    return this.bookmarkService.createBookmark(id, bookmark);
   }
 
   @Patch('/:id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Auth() userId: string,
+    @Param('id', ParseIntPipe) bookmarkId: number,
     @Body() bookmark: UpdateBookmarkDTO,
   ) {
-    return this.bookmarkService.updateBookmark(id, bookmark);
+    return this.bookmarkService.updateBookmark(userId, bookmarkId, bookmark);
   }
 
   @Delete('/:id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.bookmarkService.removeBookmark(id);
+  remove(
+    @Auth() userId: string,
+    @Param('id', ParseIntPipe) bookmarkId: number,
+  ) {
+    return this.bookmarkService.removeBookmark(userId, bookmarkId);
   }
 }

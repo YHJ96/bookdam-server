@@ -7,6 +7,7 @@ CREATE TABLE "Bookmark" (
     "url" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "user_id" TEXT NOT NULL,
 
     CONSTRAINT "bookmark_pkey" PRIMARY KEY ("id")
 );
@@ -36,11 +37,14 @@ CREATE TABLE "User" (
     "avatar" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tag_name_key" ON "Tag"("name");
+
+-- AddForeignKey
+ALTER TABLE "Bookmark" ADD CONSTRAINT "user_bookmark_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Tags" ADD CONSTRAINT "tags_bookmark_id_fkey" FOREIGN KEY ("bookmark_id") REFERENCES "Bookmark"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

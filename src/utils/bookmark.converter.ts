@@ -2,7 +2,9 @@ import { Bookmark, Tags, Tag } from '@prisma/client';
 import { tagConverter } from './tag.converter';
 
 type BookmarksSource = Array<BookmarkSource>;
-type BookmarkSource = Bookmark & { tags: Array<Tags & { tag: Tag }> };
+type BookmarkSource = Omit<Bookmark, 'user_id'> & {
+  tags: Array<Tags & { tag: Tag }>;
+};
 
 export const bookmarksConverter = (source: BookmarksSource) => {
   return source.map((bookmark) => bookmarkConverter(bookmark));
