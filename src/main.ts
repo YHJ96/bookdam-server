@@ -7,6 +7,7 @@ import {
   OgsExceptionFilter,
   PrismaClientExceptionFilter,
 } from '@/helpers/filters';
+import { CamelCaseInterceptor } from '@/helpers/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
   const CLIENT_URL = config.get('CLIENT_URL');
 
   app.use(cookieParser());
+  app.useGlobalInterceptors(new CamelCaseInterceptor());
 
   app.enableCors({
     origin: CLIENT_URL,
