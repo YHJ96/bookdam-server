@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma';
+import { tagConverter } from '@/utils';
+import { TagsService } from '@/modules/tags/tags.service';
 
 @Injectable()
 export class TagService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private tagsService: TagsService,
+  ) {}
 
   async findAllTags() {
-    const tags = await this.prisma.tags.findMany({
-      select: { tag: { select: { name: true } } },
-      distinct: ['tag_id'],
-    });
+    const tags = await this.tagsService.findAllTags();
 
-    return tags.map((relation) => relation.tag.name);
+    return tagConverter(tags);
   }
 
   async createTags(names: string[]) {
@@ -22,14 +24,14 @@ export class TagService {
       skipDuplicates: true,
     });
 
-    return this.findByNamesTags(names);
+    return this.findIdsByTagNames(names);
   }
 
-  private async findByNamesTags(names: string[]) {
-    const tags = await this.prisma.tag.findMany({
+  private async findIdsByTagNames(names: string[]) {
+    const result = await this.prisma.tag.findMany({
       where: { name: { in: names } },
     });
 
-    return tags.map((tag) => ({ tag_id: tag.id }));
+    return result.map((tag) => ({ tag_id: tag.id }));
   }
 }

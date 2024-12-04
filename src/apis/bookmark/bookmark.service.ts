@@ -51,7 +51,7 @@ export class BookmarkService {
   }
 
   async updateBookmark(id: number, bookmark: UpdateBookmarkDTO) {
-    await this.tagsService.deleteMany(id);
+    await this.tagsService.deleteManyTags(id);
 
     const tagIds = await this.tagService.createTags(bookmark.tags);
     Reflect.deleteProperty(bookmark, 'tags');
