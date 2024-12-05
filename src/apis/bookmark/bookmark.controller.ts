@@ -10,8 +10,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { BookmarkService } from '@/apis/bookmark/bookmark.service';
-import { Auth } from '@/helpers/decorators';
+import { Auth, Public } from '@/helpers/decorators';
 import {
+  GetOgTagDTO,
   CreateBookmarkDTO,
   FindAllBookmarkDTO,
   UpdateBookmarkDTO,
@@ -25,6 +26,12 @@ export class BookmarkController {
   findAll(@Auth() id: string, @Query() { tags, asc }: FindAllBookmarkDTO) {
     if (tags === null) return this.bookmarkService.findAllBookmark(id, asc);
     return this.bookmarkService.findAllIncludeTags(id, tags, asc);
+  }
+
+  @Public()
+  @Get('/og')
+  getOgTag(@Query() { url }: GetOgTagDTO) {
+    return this.bookmarkService.getOpenGraph(url);
   }
 
   @Post()

@@ -86,7 +86,7 @@ export class BookmarkService {
     });
   }
 
-  private async getOpenGraph(url: string) {
+  async getOpenGraph(url: string) {
     const { result } = await ogs({ url });
     const { ogTitle, ogDescription, ogImage, requestUrl } = result;
 
