@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma';
-import { tagConverter } from '@/utils';
-import { TagsService } from '@/modules/tags/tags.service';
 
 @Injectable()
 export class TagService {
-  constructor(
-    private prisma: PrismaService,
-    private tagsService: TagsService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async findAllTags() {
-    const tags = await this.tagsService.findAllTags();
+  async findAllTags(id: string) {
+    const result = await this.prisma.tag.findMany({
+      where: { tags: { some: { bookmark: { user_id: id } } } },
+    });
 
-    return tagConverter(tags);
+    return result.map((tag) => tag.name);
   }
 
   async createTags(names: string[]) {

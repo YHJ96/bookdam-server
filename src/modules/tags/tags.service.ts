@@ -12,11 +12,4 @@ export class TagsService {
   async deleteManyTags(id: number) {
     return this.prisma.tags.deleteMany({ where: { bookmark_id: id } });
   }
-
-  async findAllTags() {
-    return this.prisma.tags.findMany({
-      distinct: ['tag_id'],
-      include: { tag: true },
-    });
-  }
 }
