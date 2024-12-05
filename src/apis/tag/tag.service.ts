@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma';
+import { PrismaTransactionClient } from '@/types';
 
 @Injectable()
 export class TagService {
@@ -13,19 +14,24 @@ export class TagService {
     return result.map((tag) => tag.name);
   }
 
-  async createTags(names: string[]) {
+  async createTags(names: string[], transaction?: PrismaTransactionClient) {
+    const prisma = transaction ?? this.prisma;
     const result = names.map((name) => ({ name }));
 
-    await this.prisma.tag.createMany({
+    await prisma.tag.createMany({
       data: result,
       skipDuplicates: true,
     });
 
-    return this.findIdsByTagNames(names);
+    return this.findIdsByTagNames(names, prisma);
   }
 
-  private async findIdsByTagNames(names: string[]) {
-    const result = await this.prisma.tag.findMany({
+  private async findIdsByTagNames(
+    names: string[],
+    transaction?: PrismaTransactionClient,
+  ) {
+    const prisma = transaction ?? this.prisma;
+    const result = await prisma.tag.findMany({
       where: { name: { in: names } },
     });
 

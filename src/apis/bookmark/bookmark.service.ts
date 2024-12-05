@@ -43,19 +43,22 @@ export class BookmarkService {
 
   async createBookmark(id: string, bookmark: CreateBookmarkDTO) {
     const og = await this.getOpenGraph(bookmark.url);
-    const tagIds = await this.tagService.createTags(bookmark.tags);
 
-    const result = await this.prisma.bookmark.create({
-      omit: { user_id: true },
-      include: { tags: { include: { tag: true } } },
-      data: {
-        ...mergeBookmark(bookmark, og),
-        user_id: id,
-        tags: { create: tagIds },
-      },
+    return await this.prisma.$transaction(async (prisma) => {
+      const tagIds = await this.tagService.createTags(bookmark.tags, prisma);
+
+      const result = await prisma.bookmark.create({
+        omit: { user_id: true },
+        include: { tags: { include: { tag: true } } },
+        data: {
+          ...mergeBookmark(bookmark, og),
+          user_id: id,
+          tags: { create: tagIds },
+        },
+      });
+
+      return bookmarkConverter(result);
     });
-
-    return bookmarkConverter(result);
   }
 
   async updateBookmark(
@@ -65,17 +68,19 @@ export class BookmarkService {
   ) {
     await this.tagsService.deleteManyTags(bookmarkId);
 
-    const tagIds = await this.tagService.createTags(bookmark.tags);
-    Reflect.deleteProperty(bookmark, 'tags');
+    return await this.prisma.$transaction(async (prisma) => {
+      const tagIds = await this.tagService.createTags(bookmark.tags, prisma);
+      Reflect.deleteProperty(bookmark, 'tags');
 
-    const result = await this.prisma.bookmark.update({
-      omit: { user_id: true },
-      where: { user_id: userId, id: bookmarkId },
-      include: { tags: { include: { tag: true } } },
-      data: { ...bookmark, tags: { create: tagIds } },
+      const result = await prisma.bookmark.update({
+        omit: { user_id: true },
+        where: { user_id: userId, id: bookmarkId },
+        include: { tags: { include: { tag: true } } },
+        data: { ...bookmark, tags: { create: tagIds } },
+      });
+
+      return bookmarkConverter(result);
     });
-
-    return bookmarkConverter(result);
   }
 
   async removeBookmark(useId: string, bookmarkId: number) {
