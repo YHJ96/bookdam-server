@@ -15,6 +15,13 @@ async function bootstrap() {
   const PORT = config.get('PORT');
   const CLIENT_URL = config.get('CLIENT_URL');
 
+  console.group();
+  console.log(config.get('CLIENT_URL'));
+  console.log(config.get('CLIENT_REDIRECT_URL'));
+  console.log(config.get('KAKAO_CALLBACK_URL'));
+  console.log(config.get('GOOGLE_CALLBACK_URL'));
+  console.groupEnd();
+
   app.use(cookieParser());
   app.useGlobalInterceptors(new CamelCaseInterceptor());
 
