@@ -38,8 +38,8 @@ export class AuthService {
   ) {
     res.cookie(name, jwt, {
       maxAge: this.COOKIE_MAX_AGE,
+      sameSite: 'none',
       secure: true,
-      sameSite: 'strict',
       httpOnly: true,
     });
   }
