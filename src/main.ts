@@ -2,12 +2,12 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
-import { AppModule } from '@/apis/app/app.module';
+import { AppModule } from './apis/app/app.module';
 import {
   OgsExceptionFilter,
   PrismaClientExceptionFilter,
-} from '@/helpers/filters';
-import { CamelCaseInterceptor } from '@/helpers/interceptors';
+} from './helpers/filters';
+import { CamelCaseInterceptor } from './helpers/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

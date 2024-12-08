@@ -6,8 +6,8 @@ import {
   Patch,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Auth } from '@/helpers/decorators';
-import { TrashService } from '@/apis/trash/trash.service';
+import { Auth } from '../../helpers/decorators';
+import { TrashService } from '../../apis/trash/trash.service';
 
 @Controller('trash')
 export class TrashController {
