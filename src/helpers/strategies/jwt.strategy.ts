@@ -12,9 +12,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         (request) => {
           const accessCookie = request.cookies?.['access'];
           const refreshCookie = request.cookies?.['refresh'];
+          if (accessCookie === undefined) return null;
+
           const { exp } = jwtService.decode(accessCookie) as { exp: number };
           const currentTime = Math.floor(Date.now() / 1000);
-
           if (exp > currentTime) return accessCookie;
 
           return refreshCookie || null;

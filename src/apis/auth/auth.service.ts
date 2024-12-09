@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { User } from '@prisma/client';
+import { encrypt } from '../../utils/crypto';
 
 @Injectable()
 export class AuthService {
@@ -12,14 +14,16 @@ export class AuthService {
 
   constructor(private jwtService: JwtService) {}
 
-  createJwt(id: string) {
+  createJwt(user: User) {
+    const ec = encrypt(JSON.stringify(user));
+
     const accessToken = this.jwtService.sign(
-      { id },
+      { id: user.id, ec },
       { expiresIn: this.ACCESS_EXPIRES_IN },
     );
 
     const refreshToken = this.jwtService.sign(
-      { id },
+      { id: user.id, ec },
       { expiresIn: this.REFRESH_EXPIRES_IN },
     );
 

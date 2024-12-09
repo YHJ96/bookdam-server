@@ -29,7 +29,7 @@ export class AuthController {
   @Get('/kakao/callback')
   @UseGuards(KakaoAuthGuard)
   async kakaoCallback(@Jwt() jwt: User, @Res() res: Response) {
-    const { accessToken, refreshToken } = this.authService.createJwt(jwt.id);
+    const { accessToken, refreshToken } = this.authService.createJwt(jwt);
 
     await this.userService.createUser(jwt);
     this.authService.regiserCookie('access', accessToken, res);
@@ -49,7 +49,7 @@ export class AuthController {
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Jwt() jwt: User, @Res() res: Response) {
-    const { accessToken, refreshToken } = this.authService.createJwt(jwt.id);
+    const { accessToken, refreshToken } = this.authService.createJwt(jwt);
 
     await this.userService.createUser(jwt);
     this.authService.regiserCookie('access', accessToken, res);
@@ -60,7 +60,7 @@ export class AuthController {
 
   @Post('/refresh')
   refresh(@Jwt() jwt: User, @Res() res: Response) {
-    const { accessToken } = this.authService.createJwt(jwt.id);
+    const { accessToken } = this.authService.createJwt(jwt);
 
     return this.authService.regiserCookie('access', accessToken, res);
   }
