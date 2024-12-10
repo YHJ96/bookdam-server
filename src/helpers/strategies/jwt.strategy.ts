@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
@@ -12,16 +12,21 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         (request) => {
           const accessCookie = request.cookies?.['access'];
           const refreshCookie = request.cookies?.['refresh'];
-          if (accessCookie === undefined) return null;
 
-          const { exp } = jwtService.decode(accessCookie) as { exp: number };
-          const currentTime = Math.floor(Date.now() / 1000);
-          if (exp > currentTime) return accessCookie;
+          try {
+            const key = configService.get('JWT_SECRET_OR_KEY');
+            const access = jwtService.verify(accessCookie, key);
+            const refresh = jwtService.verify(refreshCookie, key);
+            const currentTime = Math.floor(Date.now() / 1000);
 
-          return refreshCookie || null;
+            if (access.exp > currentTime) return accessCookie;
+            return refresh;
+          } catch {
+            throw new UnauthorizedException();
+          }
         },
       ]),
-      ignoreExpiration: false,
+      ignoreExpiration: true,
       secretOrKey: configService.get('JWT_SECRET_OR_KEY'),
     });
   }
