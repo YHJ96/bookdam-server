@@ -42,7 +42,7 @@ export class BookmarkService {
   }
 
   async createBookmark(id: string, bookmark: CreateBookmarkDTO) {
-    const og = await this.getOpenGraph(bookmark.url);
+    const og = await this.createOpenGraph(bookmark.url);
 
     return await this.prisma.$transaction(async (prisma) => {
       const tagIds = await this.tagService.createTags(bookmark.tags, prisma);
@@ -91,7 +91,7 @@ export class BookmarkService {
     });
   }
 
-  async getOpenGraph(url: string) {
+  private async createOpenGraph(url: string) {
     const { result } = await ogs({ url });
     const { ogTitle, ogDescription, ogImage, requestUrl } = result;
 
@@ -101,5 +101,10 @@ export class BookmarkService {
       image: extractOgImage(ogImage),
       url: requestUrl,
     };
+  }
+
+  async createOgTag(bookmark: CreateBookmarkDTO) {
+    const og = await this.createOpenGraph(bookmark.url);
+    return mergeBookmark(bookmark, og);
   }
 }

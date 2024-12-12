@@ -7,11 +7,6 @@ import {
   IsBoolean,
 } from 'class-validator';
 
-export class GetOgTagDTO {
-  @IsUrl()
-  url: string;
-}
-
 export class FindAllBookmarkDTO {
   @IsOptional()
   @Transform(({ value }) => value.split(','))

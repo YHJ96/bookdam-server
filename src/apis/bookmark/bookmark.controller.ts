@@ -12,7 +12,6 @@ import {
 import { BookmarkService } from '../../apis/bookmark/bookmark.service';
 import { Auth, Public } from '../../helpers/decorators';
 import {
-  GetOgTagDTO,
   CreateBookmarkDTO,
   FindAllBookmarkDTO,
   UpdateBookmarkDTO,
@@ -29,9 +28,9 @@ export class BookmarkController {
   }
 
   @Public()
-  @Get('/og')
-  getOgTag(@Query() { url }: GetOgTagDTO) {
-    return this.bookmarkService.getOpenGraph(url);
+  @Post('/og')
+  createOgTag(@Body() bookmark: CreateBookmarkDTO) {
+    return this.bookmarkService.createOgTag(bookmark);
   }
 
   @Post()
