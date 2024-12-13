@@ -7,7 +7,10 @@ import {
   OgsExceptionFilter,
   PrismaClientExceptionFilter,
 } from './helpers/filters';
-import { CamelCaseInterceptor } from './helpers/interceptors';
+import {
+  CamelCaseInterceptor,
+  LoggingInterceptor,
+} from './helpers/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,15 +18,9 @@ async function bootstrap() {
   const PORT = config.get('PORT');
   const CLIENT_URL = config.get('CLIENT_URL');
 
-  console.group();
-  console.log(config.get('CLIENT_URL'));
-  console.log(config.get('CLIENT_REDIRECT_URL'));
-  console.log(config.get('KAKAO_CALLBACK_URL'));
-  console.log(config.get('GOOGLE_CALLBACK_URL'));
-  console.groupEnd();
-
   app.use(cookieParser());
   app.useGlobalInterceptors(new CamelCaseInterceptor());
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.enableCors({
     origin: CLIENT_URL,
