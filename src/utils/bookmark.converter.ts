@@ -2,7 +2,7 @@ import { Bookmark, Tags, Tag } from '@prisma/client';
 import { tagConverter } from './tag.converter';
 
 type BookmarksSource = Array<BookmarkSource>;
-type BookmarkSource = Omit<Bookmark, 'user_id'> & {
+type BookmarkSource = Omit<Bookmark, 'user_id' | 'is_deleted'> & {
   tags: Array<Tags & { tag: Tag }>;
 };
 

@@ -32,7 +32,7 @@ export class BookmarkService {
 
   async findAllBookmark(id: string, isAsc: boolean) {
     const result = await this.prisma.bookmark.findMany({
-      omit: { user_id: true },
+      omit: { user_id: true, is_deleted: true },
       where: { user_id: id, is_deleted: false },
       orderBy: { created_at: order(isAsc) },
       include: { tags: { include: { tag: true } } },
@@ -48,7 +48,7 @@ export class BookmarkService {
       const tagIds = await this.tagService.createTags(bookmark.tags, prisma);
 
       const result = await prisma.bookmark.create({
-        omit: { user_id: true },
+        omit: { user_id: true, is_deleted: true },
         include: { tags: { include: { tag: true } } },
         data: {
           ...mergeBookmark(bookmark, og),
@@ -73,7 +73,7 @@ export class BookmarkService {
       Reflect.deleteProperty(bookmark, 'tags');
 
       const result = await prisma.bookmark.update({
-        omit: { user_id: true },
+        omit: { user_id: true, is_deleted: true },
         where: { user_id: userId, id: bookmarkId },
         include: { tags: { include: { tag: true } } },
         data: { ...bookmark, tags: { create: tagIds } },
@@ -84,11 +84,14 @@ export class BookmarkService {
   }
 
   async removeBookmark(useId: string, bookmarkId: number) {
-    return await this.prisma.bookmark.update({
-      omit: { user_id: true },
+    const result = await this.prisma.bookmark.update({
+      omit: { user_id: true, is_deleted: true },
       where: { user_id: useId, id: bookmarkId, is_deleted: false },
+      include: { tags: { include: { tag: true } } },
       data: { is_deleted: true },
     });
+
+    return bookmarkConverter(result);
   }
 
   private async createOpenGraph(url: string) {
