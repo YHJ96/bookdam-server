@@ -47,4 +47,18 @@ export class AuthService {
       httpOnly: true,
     });
   }
+
+  refreshAccessCookie(info: { id: string; ec: string }, res: Response) {
+    const accessToken = this.jwtService.sign(
+      { id: info.id, ec: info.ec },
+      { expiresIn: this.ACCESS_EXPIRES_IN },
+    );
+
+    res.cookie(this.ACCESS_COOKIE_NAME, accessToken, {
+      maxAge: this.COOKIE_MAX_AGE,
+      sameSite: 'none',
+      secure: true,
+      httpOnly: true,
+    });
+  }
 }

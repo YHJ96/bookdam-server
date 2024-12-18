@@ -58,13 +58,6 @@ export class AuthController {
     return res.redirect(this.CLIENT_REDIRECT_URL);
   }
 
-  @Post('/refresh')
-  refresh(@Jwt() jwt: User, @Res() res: Response) {
-    const { accessToken } = this.authService.createJwt(jwt);
-
-    return this.authService.regiserCookie('access', accessToken, res);
-  }
-
   @Post('/logout')
   logout(@Res({ passthrough: true }) res: Response) {
     return this.authService.clearCookie(res);
