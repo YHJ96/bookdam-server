@@ -8,7 +8,9 @@ export class TagService {
 
   async findAllTags(id: string) {
     const result = await this.prisma.tag.findMany({
-      where: { tags: { some: { bookmark: { user_id: id } } } },
+      where: {
+        tags: { some: { bookmark: { user_id: id, is_deleted: false } } },
+      },
     });
 
     return result.map((tag) => tag.name);
