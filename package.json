@@ -30,7 +30,6 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.7",
-    "crypto-js": "^4.2.0",
     "open-graph-scraper": "^6.8.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",

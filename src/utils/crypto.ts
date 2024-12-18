@@ -1,9 +1,20 @@
-import CryptoJS from 'crypto-js';
+import crypto from 'crypto';
 
-export const encrypt = (data: string) =>
-  CryptoJS.AES.encrypt(data, process.env.SECRET_KEY).toString();
+export const encrypt = (data: string) => {
+  const algorithm = 'aes-256-ccm';
+  const key = process.env.SECRET_KEY;
+  const nonce = crypto.randomBytes(12);
 
-export const decrypt = (data: string) => {
-  const bytes = CryptoJS.AES.decrypt(data, process.env.SECRET_KEY);
-  return bytes.toString(CryptoJS.enc.Utf8);
+  const cipher = crypto.createCipheriv(
+    algorithm,
+    Buffer.from(key, 'utf-8'),
+    nonce,
+    { authTagLength: 16 },
+  );
+  const encrypted = cipher.update(data, 'utf8', 'hex') + cipher.final('hex');
+  const authTag = cipher.getAuthTag();
+
+  return (
+    nonce.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted
+  );
 };
