@@ -17,14 +17,16 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const PORT = config.get('PORT');
   const CLIENT_URL = config.get('CLIENT_URL');
+  const CLIENT_WWW_URL = config.get('CLIENT_WWW_URL');
 
   app.use(cookieParser());
   app.useGlobalInterceptors(new CamelCaseInterceptor());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.enableCors({
-    origin: CLIENT_URL,
+    origin: [CLIENT_URL, CLIENT_WWW_URL],
     credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   });
 
   app.useGlobalPipes(
