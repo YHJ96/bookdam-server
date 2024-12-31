@@ -17,7 +17,7 @@ export class OgsExceptionFilter extends BaseExceptionFilter {
     if ('result' in exception && 'requestUrl' in exception.result) {
       const [code, ...text] = exception.result.error.split(' ');
 
-      return response.json({
+      return response.status(Number(code)).json({
         message: 'URL 정보를 찾을 수 없습니다.',
         error: text.join(' '),
         statusCode: Number.isNaN(Number(code)) ? 500 : Number(code),
