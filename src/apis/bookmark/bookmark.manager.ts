@@ -6,6 +6,7 @@ type OgItems = {
   ogDescription: 'description';
   requestUrl: 'url';
 };
+
 type OgImage = Awaited<ReturnType<typeof ogs>>['result']['ogImage'];
 type Og = Pick<Awaited<ReturnType<typeof ogs>>['result'], keyof OgItems>;
 type OgResult = {
@@ -32,4 +33,14 @@ export const mergeBookmark = (bookmark: CreateBookmarkDTO, og: OgResult) => {
   if (bookmark.description !== '') result.description = result.description;
 
   return result;
+};
+
+export const processImagesUrl = (imagesUrl: OgImage) => {
+  return imagesUrl.map((image) => {
+    if (image.url.includes('https://')) return image;
+    if (image.url.includes('http://')) return image;
+    if (image.url.includes('//'))
+      return { ...image, url: `https:${image.url}` };
+    return image;
+  });
 };
