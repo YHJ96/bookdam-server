@@ -35,12 +35,12 @@ export const mergeBookmark = (bookmark: CreateBookmarkDTO, og: OgResult) => {
   return result;
 };
 
-export const processImagesUrl = (imagesUrl: OgImage) => {
-  return imagesUrl.map((image) => {
+export const processImagesUrl = (imagesUrl?: OgImage) => {
+  return imagesUrl?.map((image) => {
     if (image.url.includes('https://')) return image;
     if (image.url.includes('http://')) return image;
     if (image.url.includes('//'))
       return { ...image, url: `https:${image.url}` };
-    return image;
+    return { ...image, url: undefined };
   });
 };
