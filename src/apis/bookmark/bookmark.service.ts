@@ -112,6 +112,7 @@ export class BookmarkService {
 
   async createOgTag(bookmark: CreateBookmarkDTO) {
     const og = await this.createOpenGraph(bookmark.url);
-    return mergeBookmark(bookmark, og);
+    const result = { ...mergeBookmark(bookmark, og), tags: bookmark.tags };
+    return result;
   }
 }
