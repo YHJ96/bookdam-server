@@ -1,99 +1,86 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 북담
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 프로젝트 구조
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### 1-1. 기술 스택
 
-## Description
+- **기술**: NestJS, Prisma, TypeScript, Supabase
+- **코드 스타일**: Prettier, ESLint
+- **배포 환경**: Vercel
+- **노드 버전**: 18.0.0 이상
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1-2. 폴더 구조
 
-## Project setup
+| Type    | Description                                                       |
+| ------- | ----------------------------------------------------------------- |
+| apis    | 주요 비즈니스 로직과 API 엔드포인트를 포함하는 폴더               |
+| helpers | 유틸리티 데코레이터, 가드, 필터 등 보조 기능을 담당               |
+| modules | 재사용 가능한 독립적인 기능 모듈들을 포함                         |
+| types   | 공통으로 사용하는 TypeScript 타입 정의와 인터페이스 파일들을 보관 |
+| utils   | 공통으로 사용되는 유틸리티 함수들을 모아둔 폴더                   |
 
-```bash
-$ pnpm install
-```
+### 1-3. 데이터베이스 구조
 
-## Compile and run the project
+- **User**: 사용자 정보를 저장
 
-```bash
-# development
-$ pnpm run start
+  - 소셜 로그인(Google, Kakao)을 통한 사용자 정보 관리
+  - 북마크와 1:N 관계
 
-# watch mode
-$ pnpm run start:dev
+- **Bookmark**: 북마크 정보를 저장
 
-# production mode
-$ pnpm run start:prod
-```
+  - User와 N:1 관계
+  - Tag와 N:M 관계 (Tags 테이블을 통해)
+  - 제목, 설명, URL, 이미지 등의 메타데이터 포함
+  - 소프트 삭제(is_deleted) 지원
 
-## Run tests
+- **Tag**: 북마크 태그 정보를 저장
 
-```bash
-# unit tests
-$ pnpm run test
+  - 태그 이름을 유니크하게 관리
+  - Bookmark와 N:M 관계
 
-# e2e tests
-$ pnpm run test:e2e
+- **Tags**: Bookmark와 Tag의 N:M 관계를 위한 중간 테이블
+  - bookmark_id와 tag_id를 복합 기본키로 사용
 
-# test coverage
-$ pnpm run test:cov
-```
+![DB](https://zyhedgwubqhgbbifgwmd.supabase.co/storage/v1/object/sign/image/DB.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZS9EQi5wbmciLCJpYXQiOjE3MzY5NjA3NDYsImV4cCI6MTgzMTU2ODc0Nn0.9ZedCV4aJRruiCfNQxklLxK9-aUv_ccSIouBWlgGRzM&t=2025-01-15T17%3A05%3A46.490Z)
 
-## Deployment
+## 서비스 소개
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+크롬 브라우저의 북마크는 구글 계정과 연동되어 있어, 회사 계정과 개인 계정을 오가며 사용할 때 불편함이 있습니다. 특히 회사에서는 업무용 구글 계정을 사용해야 하는데, 이때 저장한 북마크들을 개인 계정에서 접근하기 위해서는 계정을 전환해야 하는 불편함이 있어서 한 아이디로 북마크를 관리하는 서비스가 필요하다고 생각했습니다. 이런 문제를 해결하기 위해 "북담(BookDam)"을 개발하게 되었습니다.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2-1. 주요 기능
 
-```bash
-$ pnpm install -g mau
-$ mau deploy
-```
+**북마크 관리**
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- 북마크 추가/수정/삭제 기능을 제공합니다.
+- 제목, 설명 등을 사용자가 직접 편집할 수 있습니다.
 
-## Resources
+**메타데이터 자동 추출**
 
-Check out a few resources that may come in handy when working with NestJS:
+- URL 입력 시 제목, 설명, 이미지 등의 메타데이터를 자동으로 추출합니다.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+**태그 기반 분류**
 
-## Support
+- 북마크에 다중 태그를 지정하여 체계적으로 분류할 수 있습니다.
+- 태그 기반 필터링으로 원하는 북마크를 쉽게 찾을 수 있습니다.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**휴지통 기능**
 
-## Stay in touch
+- 실수로 삭제한 북마크를 복구할 수 있습니다.
+- 완전 삭제 전까지 휴지통에서 관리됩니다.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**소셜 로그인**
 
-## License
+- 구글/카카오 계정으로 간편하게 로그인할 수 있습니다.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 커밋 컨벤션
+
+| Type     | Description                                         |
+| -------- | --------------------------------------------------- |
+| feat     | 새로운 기능 추가                                    |
+| fix      | 버그 수정 또는 typo                                 |
+| refactor | 리팩토링                                            |
+| comment  | 필요한 주석 추가 및 변경                            |
+| test     | 테스트(테스트 코드 추가/수정/삭제), 테스트 리팩토링 |
+| rename   | 파일 혹은 폴더명을 수정하거나 옮기는 경우           |
+| remove   | 파일을 삭제하는 작업만 수행하는 경우                |
+| docs     | 문서 작업, 수정                                     |
